@@ -1,0 +1,73 @@
+<configuration>
+    <!-- Perf4J appenders -->
+
+    <conversionRule conversionWord="coloredLevel" converterClass="play.api.Logger$ColoredLevel" />
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>[%thread]: %date: [%coloredLevel] - %n%message%n%xException%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="graphExecutionMeanTimes" class="org.perf4j.logback.GraphingStatisticsAppender">
+        <!-- Possible GraphTypes are Mean, Min, Max, StdDev, Count and TPS -->
+        <param name="GraphType" value="Mean"/>
+        <param name="TagNamesToGraph" value="GET.graph" />
+    </appender>
+
+    <appender name="graphExecutionMaxTimes" class="org.perf4j.logback.GraphingStatisticsAppender">
+        <!-- Possible GraphTypes are Mean, Min, Max, StdDev, Count and TPS -->
+        <param name="GraphType" value="Max"/>
+        <param name="TagNamesToGraph" value="GET.graph" />
+    </appender>
+
+    <appender name="graphExecutionCounts" class="org.perf4j.logback.GraphingStatisticsAppender">
+        <param name="GraphType" value="Count" />
+        <param name="TagNamesToGraph" value="GET.graph" />
+    </appender>
+
+    <appender name="CoalescingStatistics" class="org.perf4j.logback.AsyncCoalescingStatisticsAppender">
+        <param name="TimeSlice" value="15000"/> <!-- refresh graph every 15secs, sliding widow of 5 mins (15sec * 20) -->
+        <appender-ref ref="STDOUT"/>
+        <appender-ref ref="graphExecutionMeanTimes"/>
+        <appender-ref ref="graphExecutionMaxTimes"/>
+        <appender-ref ref="graphExecutionCounts"/>
+    </appender>
+
+    <appender name="graphExecutionMeanTimes1" class="org.perf4j.logback.GraphingStatisticsAppender">
+        <!-- Possible GraphTypes are Mean, Min, Max, StdDev, Count and TPS -->
+        <param name="GraphType" value="Mean"/>
+        <param name="TagNamesToGraph" value="GET.graph" />
+    </appender>
+
+    <appender name="graphExecutionMaxTimes1" class="org.perf4j.logback.GraphingStatisticsAppender">
+        <!-- Possible GraphTypes are Mean, Min, Max, StdDev, Count and TPS -->
+        <param name="GraphType" value="Max"/>
+        <param name="TagNamesToGraph" value="GET.graph" />
+    </appender>
+
+    <appender name="graphExecutionCounts1" class="org.perf4j.logback.GraphingStatisticsAppender">
+        <param name="GraphType" value="Count" />
+        <param name="TagNamesToGraph" value="GET.graph" />
+    </appender>
+
+    <appender name="CoalescingStatistics1" class="org.perf4j.logback.AsyncCoalescingStatisticsAppender">
+        <param name="TimeSlice" value="360000"/> <!--360000milis = 6 minutes, would expect graph to contain 1 hour window refreshed every 6 minutes.-->
+        <appender-ref ref="STDOUT"/>
+        <appender-ref ref="graphExecutionMeanTimes1"/>
+        <appender-ref ref="graphExecutionMaxTimes1"/>
+        <appender-ref ref="graphExecutionCounts1"/>
+    </appender>
+    
+
+    <logger name="org.perf4j.TimingLogger" additivity="false">
+        <level value="DEBUG"/>
+        <appender-ref ref="CoalescingStatistics"/>
+    </logger>
+
+    <!-- STDOUT is enough on heroku -->
+    <root level="DEBUG">
+        <appender-ref ref="STDOUT" />
+    </root>
+
+</configuration>

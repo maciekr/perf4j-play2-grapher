@@ -1,0 +1,14 @@
+@(refreshRate: Int, graphNamesAndUrls: List[(String, String)])(implicit request: RequestHeader)
+<html>
+<head>
+    <title>Perf4J Performance Graphs</title>
+    <meta http-equiv="refresh" content="@refreshRate"/>
+</head>
+<body>
+<br><br>
+@for(graphName <- graphNamesAndUrls){
+<b>@graphName._1</b><br>
+<img src="@graphName._2"/>
+}
+</body>
+</html>
