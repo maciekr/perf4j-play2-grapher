@@ -16,6 +16,7 @@ object GraphingController extends Controller with Perf4j {
       val chartsByName = getChartGeneratorsToDisplay(request);
       Ok(views.html.perf4j.graphs(60, chartsByName.foldLeft(List[(String, String)]()) { 
         case (res, ((key, Some(chartGenerator)))) => (key, chartGenerator.getChartUrl) :: res
+        case (res, _) => res
       })).as("text/html;charset=utf-8")
   }
 
